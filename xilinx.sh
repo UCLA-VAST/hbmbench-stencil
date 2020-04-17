@@ -72,7 +72,7 @@ exe="${tmp_dir}/gaussian.frt"
 kernel="${tmp_dir}/gaussian.cpp"
 config="${tmp_dir}/gaussian.ini"
 object="${tmp_dir}/gaussian.xo"
-binary="${tmp_dir}/gaussian.xclbin"
+binary="${tmp_dir}/gaussian.Congestion_SpreadLogic_high.xclbin"
 test -f "${host}" && test -f "${kernel}" ||
   sodac "${base_dir}/src/gaussian.soda" \
     --burst-width="${burst_width}" \
@@ -92,6 +92,9 @@ if ! test -f "${config}"; then
   cat >"${config}" <<EOF
 [advanced]
 prop=kernel.gaussian_kernel.kernel_flags=-std=c++11
+
+[vivado]
+prop=run.impl_1.STRATEGY=Congestion_SpreadLogic_high
 
 [connectivity]
 nk=gaussian_kernel:1:gaussian_kernel
