@@ -81,6 +81,8 @@ test -f "${host}" && test -f "${kernel}" ||
     --dram-out="${dram_out}" \
     --frt-host="${host}" \
     --xocl-kernel="${kernel}"
+# shorten AXI master names
+sed -i -e 's/bundle=\(in\|out\)put_bank_/bundle=\1/' "${kernel}"
 test -x "${exe}" ||
   g++ "${host}" \
     -DSODA_TEST_MAIN -O3 \
