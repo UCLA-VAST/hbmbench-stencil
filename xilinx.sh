@@ -84,6 +84,7 @@ test -f "${host}" && test -f "${kernel}" ||
 test -x "${exe}" ||
   g++ "${host}" \
     -DSODA_TEST_MAIN -O3 \
+    -fopenmp \
     "-I${XILINX_VIVADO}/include" \
     -l:libfrt.a -l:libtinyxml.a -lOpenCL \
     -o "${exe}"

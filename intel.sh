@@ -5,10 +5,10 @@ board=s10mx_hbm_es
 channel_count="32"
 case $1 in
   1)
-    # case 1: 
+    # case 1:
     #   each channel connects to 1 input port or 1 output port
     #   each port is k-element wide
-    burst_width=256 
+    burst_width=256
     unroll_factor=256   # = 256 bits / 16 bits * 16 channels
     dram_in="$(seq -s . 0 15)"
     dram_out="$(seq -s . 16 31)"
@@ -55,6 +55,7 @@ test -f "${host}" || test -f "${kernel}" ||
 test -x "${exe}" ||
   g++ "${host}" \
     -DSODA_TEST_MAIN -O3 \
+    -fopenmp \
     "-I${XILINX_VIVADO}/include" \
     -l:libfrt.a -l:libtinyxml.a -lOpenCL \
     -o "${exe}"
