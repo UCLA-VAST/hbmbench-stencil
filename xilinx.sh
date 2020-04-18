@@ -109,24 +109,38 @@ EOF
   done
 fi
 pushd "${tmp_dir}"
-test -f "${object}" ||
+if ! test -f "${object}"; then
+  vpp_tmp_dir="$(mktemp -d --suffix .v++)"
+  ln -sfn "${vpp_tmp_dir}" "${tmp_dir}/compile.temp.symlink"
   v++ "${kernel}" \
     --compile \
     --save-temps \
     --report_level 2 \
     --target hw \
+    --temp_dir "${vpp_tmp_dir}" \
     --platform "${platform}" \
     --config "${config}" \
     --kernel gaussian_kernel \
     --output "${object}"
-test -f "${binary}" ||
+  mv "${vpp_tmp_dir}" "${tmp_dir}/compile.temp"
+  ln -sfn "${tmp_dir}/compile.temp" "${tmp_dir}/compile.temp.symlink"
+fi
+
+if ! test -f "${binary}"; then
+  vpp_tmp_dir="$(mktemp -d --suffix .v++)"
+  ln -sfn "${vpp_tmp_dir}" "${tmp_dir}/link.temp.symlink"
   v++ "${object}" \
     --link \
     --save-temps \
     --report_level 2 \
     --target hw \
+    --temp_dir "${vpp_tmp_dir}" \
     --platform "${platform}" \
     --config "${config}" \
     --remote_ip_cache ~/.remote_ip_cache \
     --output "${binary}"
+  mv "${vpp_tmp_dir}" "${tmp_dir}/link.temp"
+  ln -sfn "${tmp_dir}/link.temp" "${tmp_dir}/link.temp.symlink"
+fi
+
 popd
